@@ -1,0 +1,74 @@
+[
+  {
+    "id": "aurora",
+    "name": "Anillo Aurora",
+    "description": "Oro blanco 18k con diamante central de talla brillante.",
+    "image": "https://images.unsplash.com/photo-1603974372039-adc49044b6bd?auto=format&fit=crop&w=1100&q=80",
+    "featured": true,
+    "consulted": true,
+    "tags": ["Pieza exclusiva", "Stock limitado"]
+  },
+  {
+    "id": "souverain",
+    "name": "Collar Souverain",
+    "description": "Cadena en oro amarillo con colgante de zafiro azul intenso.",
+    "image": "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1100&q=80",
+    "featured": true,
+    "consulted": true,
+    "tags": ["Pieza exclusiva"]
+  },
+  {
+    "id": "lumiere",
+    "name": "Pendientes Lumiere",
+    "description": "Diamantes en montura invisible para un brillo continuo.",
+    "image": "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=1100&q=80",
+    "featured": false,
+    "consulted": true,
+    "tags": ["Stock limitado"]
+  },
+  {
+    "id": "imperiale",
+    "name": "Pulsera Imperiale",
+    "description": "Diseno articulado en oro rosa y pavimento de diamantes.",
+    "image": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1100&q=80",
+    "featured": true,
+    "consulted": false,
+    "tags": ["Pieza exclusiva"]
+  },
+  {
+    "id": "eternelle",
+    "name": "Anillo Eternelle",
+    "description": "Aro de platino con halo de diamantes seleccionados a mano.",
+    "image": "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=1100&q=80",
+    "featured": false,
+    "consulted": false,
+    "tags": ["Pieza exclusiva", "Stock limitado"]
+  },
+  {
+    "id": "royale",
+    "name": "Collar Royale",
+    "description": "Diamantes y esmeraldas en composicion de alta joyeria.",
+    "image": "assets/fotoconcircon.png",
+    "featured": true,
+    "consulted": false,
+    "tags": ["Pieza exclusiva"]
+  },
+  {
+    "id": "celeste",
+    "name": "Set Celeste",
+    "description": "Juego de collar y pendientes con diamantes talla pera.",
+    "image": "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1100&q=80",
+    "featured": false,
+    "consulted": false,
+    "tags": ["Stock limitado"]
+  },
+  {
+    "id": "valentina",
+    "name": "Anillo Valentina",
+    "description": "Montura de oro rosa con diamante oval y micro pavimento.",
+    "image": "https://images.unsplash.com/photo-1615655114868-3ad2f8f6b0f8?auto=format&fit=crop&w=1100&q=80",
+    "featured": false,
+    "consulted": false,
+    "tags": ["Pieza exclusiva"]
+  }
+]

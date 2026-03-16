@@ -1,87 +1,20 @@
-const catalog = [
-  {
-    id: "aurora",
-    name: "Anillo Aurora",
-    description: "Oro blanco 18k con diamante central de talla brillante.",
-    image:
-      "https://images.unsplash.com/photo-1603974372039-adc49044b6bd?auto=format&fit=crop&w=1100&q=80",
-    featured: true,
-    consulted: true,
-    tags: ["Pieza exclusiva", "Stock limitado"],
-  },
-  {
-    id: "souverain",
-    name: "Collar Souverain",
-    description: "Cadena en oro amarillo con colgante de zafiro azul intenso.",
-    image:
-      "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?auto=format&fit=crop&w=1100&q=80",
-    featured: true,
-    consulted: true,
-    tags: ["Pieza exclusiva"],
-  },
-  {
-    id: "lumiere",
-    name: "Pendientes Lumiere",
-    description: "Diamantes en montura invisible para un brillo continuo.",
-    image:
-      "https://images.unsplash.com/photo-1630019852942-f89202989a59?auto=format&fit=crop&w=1100&q=80",
-    featured: false,
-    consulted: true,
-    tags: ["Stock limitado"],
-  },
-  {
-    id: "imperiale",
-    name: "Pulsera Imperiale",
-    description: "Diseno articulado en oro rosa y pavimento de diamantes.",
-    image:
-      "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1100&q=80",
-    featured: true,
-    consulted: false,
-    tags: ["Pieza exclusiva"],
-  },
-  {
-    id: "eternelle",
-    name: "Anillo Eternelle",
-    description: "Aro de platino con halo de diamantes seleccionados a mano.",
-    image:
-      "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=1100&q=80",
-    featured: false,
-    consulted: false,
-    tags: ["Pieza exclusiva", "Stock limitado"],
-  },
-  {
-    id: "royale",
-    name: "Collar Royale",
-    description: "Diamantes y esmeraldas en composicion de alta joyeria.",
-    image:
-      "https://images.unsplash.com/photo-1620656798579-1984d7f3b98f?auto=format&fit=crop&w=1100&q=80",
-    featured: true,
-    consulted: false,
-    tags: ["Pieza exclusiva"],
-  },
-  {
-    id: "celeste",
-    name: "Set Celeste",
-    description: "Juego de collar y pendientes con diamantes talla pera.",
-    image:
-      "https://images.unsplash.com/photo-1515377905703-c4788e51af15?auto=format&fit=crop&w=1100&q=80",
-    featured: false,
-    consulted: false,
-    tags: ["Stock limitado"],
-  },
-  {
-    id: "valentina",
-    name: "Anillo Valentina",
-    description: "Montura de oro rosa con diamante oval y micro pavimento.",
-    image:
-      "https://images.unsplash.com/photo-1615655114868-3ad2f8f6b0f8?auto=format&fit=crop&w=1100&q=80",
-    featured: false,
-    consulted: false,
-    tags: ["Pieza exclusiva"],
-  },
-];
-
 const whatsappBase = "https://wa.me/56949543511";
+
+async function loadCatalog() {
+  const response = await fetch("./products.json", { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error(`No se pudo cargar products.json (${response.status})`);
+  }
+
+  const data = await response.json();
+
+  if (!Array.isArray(data)) {
+    throw new Error("El archivo products.json debe contener un arreglo de productos.");
+  }
+
+  return data;
+}
 
 function buildWhatsAppLink(productName) {
   const message = `Hola, quiero consultar la disponibilidad de esta joya: ${productName}`;
@@ -104,7 +37,7 @@ function renderTags(tags = []) {
   return `<div class="tags">${items}</div>`;
 }
 
-function renderFeatured() {
+function renderFeatured(catalog) {
   const container = document.querySelector("#featuredGrid");
   if (!container) return;
 
@@ -133,7 +66,7 @@ function renderFeatured() {
     .join("");
 }
 
-function renderConsulted() {
+function renderConsulted(catalog) {
   const container = document.querySelector("#consultedGrid");
   if (!container) return;
 
@@ -165,7 +98,7 @@ function renderConsulted() {
     .join("");
 }
 
-function renderCollection() {
+function renderCollection(catalog) {
   const container = document.querySelector("#productGrid");
   if (!container) return;
 
@@ -212,6 +145,7 @@ function setupNavbar() {
 function setupMobileMenu() {
   const menuToggle = document.querySelector("#menuToggle");
   const navMenu = document.querySelector("#navMenu");
+  const mobileBreakpoint = 980;
 
   if (!menuToggle || !navMenu) return;
 
@@ -227,6 +161,14 @@ function setupMobileMenu() {
       menuToggle.setAttribute("aria-expanded", "false");
       document.body.style.overflow = "";
     });
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > mobileBreakpoint) {
+      navMenu.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+    }
   });
 }
 
@@ -262,12 +204,31 @@ function setupYear() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderFeatured();
-  renderConsulted();
-  renderCollection();
+function renderCatalogError() {
+  const message =
+    "No fue posible cargar los productos. Verifica products.json y abre el sitio desde un servidor local.";
+
+  ["#featuredGrid", "#consultedGrid", "#productGrid"].forEach((selector) => {
+    const container = document.querySelector(selector);
+    if (container) {
+      container.innerHTML = `<p>${message}</p>`;
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
   setupNavbar();
   setupMobileMenu();
-  setupRevealAnimations();
   setupYear();
+
+  try {
+    const catalog = await loadCatalog();
+    renderFeatured(catalog);
+    renderConsulted(catalog);
+    renderCollection(catalog);
+    setupRevealAnimations();
+  } catch (error) {
+    console.error(error);
+    renderCatalogError();
+  }
 });
