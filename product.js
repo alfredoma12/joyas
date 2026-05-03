@@ -1,24 +1,11 @@
 const whatsappBase = "https://wa.me/56949543511";
-const catalogCacheKey = "joyasmunoz_catalog_v1";
 
 async function loadCatalog() {
-  const cachedCatalog = sessionStorage.getItem(catalogCacheKey);
-  if (cachedCatalog) {
-    try {
-      const parsedCatalog = JSON.parse(cachedCatalog);
-      if (Array.isArray(parsedCatalog)) return parsedCatalog;
-    } catch {
-      sessionStorage.removeItem(catalogCacheKey);
-    }
-  }
-
-  const response = await fetch("./products.json", { cache: "force-cache" });
+  const response = await fetch(`./products.json?v=${Date.now()}`, { cache: "no-store" });
   if (!response.ok) throw new Error(`No se pudo cargar products.json (${response.status})`);
 
   const data = await response.json();
   if (!Array.isArray(data)) throw new Error("El archivo products.json debe contener un arreglo.");
-
-  sessionStorage.setItem(catalogCacheKey, JSON.stringify(data));
 
   return data;
 }
@@ -47,6 +34,21 @@ function buildWhatsAppLink(product) {
 function findProductById(catalog, productId) {
   const normalizedId = (productId ?? "").trim().toLowerCase();
   return catalog.find((item) => String(item?.id ?? "").trim().toLowerCase() === normalizedId);
+}
+
+function getProductImages(product) {
+  const imageList = Array.isArray(product?.images)
+    ? product.images.map((image) => String(image ?? "").trim()).filter(Boolean)
+    : [];
+
+  if (imageList.length) return imageList;
+
+  const fallbackImage = String(product?.image ?? "").trim();
+  return fallbackImage ? [fallbackImage] : [];
+}
+
+function getPrimaryImage(product) {
+  return getProductImages(product)[0] ?? "";
 }
 
 function escapeJsonString(value) {
@@ -94,7 +96,7 @@ function updateProductSeo(product) {
   const url = new URL(baseUrl);
   url.searchParams.set("id", String(product.id ?? "").trim());
 
-  const imagePath = Array.isArray(product.images) && product.images.length ? product.images[0] : product.image;
+  const imagePath = getPrimaryImage(product);
   const imageAbsoluteUrl = imagePath ? `https://joyasmunoz.lat/${String(imagePath).replace(/^\//, "")}` : "";
   const title = `${product.name} | JoyasMunoz`;
   const description = (product.description || "Descubre esta joya exclusiva en JoyasMunoz.").slice(0, 155);
@@ -154,9 +156,7 @@ function renderProduct(product) {
     return;
   }
 
-  const images = Array.isArray(product.images) && product.images.length
-    ? product.images
-    : [product.image].filter(Boolean);
+  const images = getProductImages(product);
 
   const slides = images
     .map(

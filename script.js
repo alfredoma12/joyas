@@ -1,18 +1,7 @@
 const whatsappBase = "https://wa.me/56949543511";
-const catalogCacheKey = "joyasmunoz_catalog_v1";
 
 async function loadCatalog() {
-  const cachedCatalog = sessionStorage.getItem(catalogCacheKey);
-  if (cachedCatalog) {
-    try {
-      const parsedCatalog = JSON.parse(cachedCatalog);
-      if (Array.isArray(parsedCatalog)) return parsedCatalog;
-    } catch {
-      sessionStorage.removeItem(catalogCacheKey);
-    }
-  }
-
-  const response = await fetch("./products.json", { cache: "force-cache" });
+  const response = await fetch(`./products.json?v=${Date.now()}`, { cache: "no-store" });
 
   if (!response.ok) {
     throw new Error(`No se pudo cargar products.json (${response.status})`);
@@ -23,8 +12,6 @@ async function loadCatalog() {
   if (!Array.isArray(data)) {
     throw new Error("El archivo products.json debe contener un arreglo de productos.");
   }
-
-  sessionStorage.setItem(catalogCacheKey, JSON.stringify(data));
 
   return data;
 }
@@ -59,16 +46,34 @@ function buildProductDetailsLink(product) {
   return `product.html?id=${encodeURIComponent(productId)}`;
 }
 
+function getProductImages(product) {
+  const imageList = Array.isArray(product?.images)
+    ? product.images.map((image) => String(image ?? "").trim()).filter(Boolean)
+    : [];
+
+  if (imageList.length) return imageList;
+
+  const fallbackImage = String(product?.image ?? "").trim();
+  return fallbackImage ? [fallbackImage] : [];
+}
+
+function getPrimaryImage(product) {
+  return getProductImages(product)[0] ?? "";
+}
+
 function renderCollection(catalog) {
   const container = document.querySelector("#productGrid");
   if (!container) return;
 
   container.innerHTML = catalog
     .map(
-      (item) => `
+      (item) => {
+        const primaryImage = getPrimaryImage(item);
+
+        return `
       <article class="product-card" data-reveal>
         <figure class="product-media">
-          <img src="${item.image}" alt="${item.name}" loading="lazy" decoding="async" fetchpriority="low" />
+          <img src="${primaryImage}" alt="${item.name}" loading="lazy" decoding="async" fetchpriority="low" />
         </figure>
         <div class="product-content">
           <p class="product-category">${item.categoria ?? "Sin categoria"}</p>
@@ -87,7 +92,8 @@ function renderCollection(catalog) {
           </div>
         </div>
       </article>
-    `
+    `;
+      }
     )
     .join("");
 }

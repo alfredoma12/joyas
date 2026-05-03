@@ -59,6 +59,7 @@
     "description": "Menos es más. Nuestra esclava lisa de cobre puro es la definición de la elegancia sin esfuerzo. Su superficie pulida y continua crea un espejo de tonos cálidos que se adapta con naturalidad a tu muñeca. Es esa pieza esencial que no compite con tu estilo, sino que lo completa con una sofisticación discreta y atemporal.",
     "image": "assets/cobrelisa.png",
     "images": [
+      "assets/esclavalisa.png",
       "assets/cobrelisa.png"
     ],
     "price": 7000  ,
