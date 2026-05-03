@@ -8,7 +8,7 @@
       "assets/pulsera_mediacaña_cobre.jpeg",
       "assets/pulsera_mediacaña_cobre_2.jpeg"
     ],
-    "price": 10000,
+    "price": 7000,
     "categoria": "Joyas de cobre",
     "featured": true,
     "consulted": true
@@ -21,7 +21,7 @@
     "images": [
       "assets/cobre_trenzado.jpeg"
     ],
-    "price": 10000,
+    "price": 7000,
     "categoria": "Joyas de cobre",
     "featured": true,
     "consulted": true
@@ -61,7 +61,7 @@
     "images": [
       "assets/cobrelisa.png"
     ],
-    "price": 10000  ,
+    "price": 7000  ,
     "categoria": "Joyas de cobre",
     "featured": false,
     "consulted": false
@@ -74,7 +74,7 @@
     "images": [
       "assets/esclavaalpaca.png"
     ],
-    "price": 10000  ,
+    "price": 7000  ,
     "categoria": "Joyas de alpaca",
     "featured": true,
     "consulted": false

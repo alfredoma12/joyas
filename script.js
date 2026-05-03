@@ -55,7 +55,7 @@ function formatPrice(price) {
 }
 
 function buildProductDetailsLink(product) {
-  const productId = product?.id ?? "";
+  const productId = String(product?.id ?? "").trim();
   return `product.html?id=${encodeURIComponent(productId)}`;
 }
 

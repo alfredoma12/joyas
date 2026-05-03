@@ -45,7 +45,46 @@ function buildWhatsAppLink(product) {
 }
 
 function buildProductDetailsLink(product) {
-  return `product.html?id=${encodeURIComponent(product?.id ?? "")}`;
+  const productId = String(product?.id ?? "").trim();
+  return `product.html?id=${encodeURIComponent(productId)}`;
+}
+
+function updateCategorySeo(category, count) {
+  const baseUrl = "https://joyasmunoz.lat/category.html";
+  const canonicalUrl = new URL(baseUrl);
+
+  if (category) {
+    canonicalUrl.searchParams.set("categoria", category);
+  }
+
+  const canonicalLink = document.querySelector("#canonicalLink");
+  if (canonicalLink) canonicalLink.setAttribute("href", canonicalUrl.toString());
+
+  const ogUrlMeta = document.querySelector("#ogUrlMeta");
+  if (ogUrlMeta) ogUrlMeta.setAttribute("content", canonicalUrl.toString());
+
+  const categoryLabel = category || "Categorias";
+  const title = `${categoryLabel} | JoyasMunoz`;
+  const description = category
+    ? `Explora ${count} joya(s) en la categoria ${category} de JoyasMunoz.`
+    : "Explora la coleccion por categoria de JoyasMunoz, joyeria de alta gama en Chile.";
+
+  document.title = title;
+
+  const descriptionMeta = document.querySelector('meta[name="description"]');
+  if (descriptionMeta) descriptionMeta.setAttribute("content", description);
+
+  const ogTitleMeta = document.querySelector('meta[property="og:title"]');
+  if (ogTitleMeta) ogTitleMeta.setAttribute("content", title);
+
+  const ogDescriptionMeta = document.querySelector('meta[property="og:description"]');
+  if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", description);
+
+  const twitterTitleMeta = document.querySelector('meta[name="twitter:title"]');
+  if (twitterTitleMeta) twitterTitleMeta.setAttribute("content", title);
+
+  const twitterDescriptionMeta = document.querySelector('meta[name="twitter:description"]');
+  if (twitterDescriptionMeta) twitterDescriptionMeta.setAttribute("content", description);
 }
 
 function renderCategory(catalog) {
@@ -57,6 +96,8 @@ function renderCategory(catalog) {
   if (!titleElement || !countElement || !grid) return;
 
   const filteredCatalog = catalog.filter((item) => item.categoria === category);
+
+  updateCategorySeo(category, filteredCatalog.length);
 
   titleElement.textContent = category || "Categoria";
   countElement.textContent = `${filteredCatalog.length} producto(s) encontrados`;

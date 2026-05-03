@@ -49,6 +49,96 @@ function findProductById(catalog, productId) {
   return catalog.find((item) => String(item?.id ?? "").trim().toLowerCase() === normalizedId);
 }
 
+function escapeJsonString(value) {
+  return String(value ?? "")
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, " ")
+    .trim();
+}
+
+function updateProductSeo(product) {
+  const baseUrl = "https://joyasmunoz.lat/product.html";
+  const canonicalLink = document.querySelector("#canonicalLink");
+  const ogUrlMeta = document.querySelector("#ogUrlMeta");
+  const ogImageMeta = document.querySelector("#ogImageMeta");
+  const twitterImageMeta = document.querySelector("#twitterImageMeta");
+  const descriptionMeta = document.querySelector('meta[name="description"]');
+  const robotsMeta = document.querySelector('meta[name="robots"]');
+  const ogTitleMeta = document.querySelector('meta[property="og:title"]');
+  const ogDescriptionMeta = document.querySelector('meta[property="og:description"]');
+  const twitterTitleMeta = document.querySelector('meta[name="twitter:title"]');
+  const twitterDescriptionMeta = document.querySelector('meta[name="twitter:description"]');
+  const structuredData = document.querySelector("#productStructuredData");
+
+  if (!product) {
+    document.title = "Producto no encontrado | JoyasMunoz";
+    if (descriptionMeta) {
+      descriptionMeta.setAttribute("content", "El producto solicitado no se encuentra disponible en este momento.");
+    }
+    if (robotsMeta) robotsMeta.setAttribute("content", "noindex,follow");
+    if (canonicalLink) canonicalLink.setAttribute("href", baseUrl);
+    if (ogUrlMeta) ogUrlMeta.setAttribute("content", baseUrl);
+    if (ogTitleMeta) ogTitleMeta.setAttribute("content", "Producto no encontrado | JoyasMunoz");
+    if (ogDescriptionMeta) {
+      ogDescriptionMeta.setAttribute("content", "El producto solicitado no se encuentra disponible en este momento.");
+    }
+    if (twitterTitleMeta) twitterTitleMeta.setAttribute("content", "Producto no encontrado | JoyasMunoz");
+    if (twitterDescriptionMeta) {
+      twitterDescriptionMeta.setAttribute("content", "El producto solicitado no se encuentra disponible en este momento.");
+    }
+    if (structuredData) structuredData.textContent = "";
+    return;
+  }
+
+  const url = new URL(baseUrl);
+  url.searchParams.set("id", String(product.id ?? "").trim());
+
+  const imagePath = Array.isArray(product.images) && product.images.length ? product.images[0] : product.image;
+  const imageAbsoluteUrl = imagePath ? `https://joyasmunoz.lat/${String(imagePath).replace(/^\//, "")}` : "";
+  const title = `${product.name} | JoyasMunoz`;
+  const description = (product.description || "Descubre esta joya exclusiva en JoyasMunoz.").slice(0, 155);
+
+  document.title = title;
+
+  if (descriptionMeta) descriptionMeta.setAttribute("content", description);
+  if (robotsMeta) robotsMeta.setAttribute("content", "index,follow");
+  if (canonicalLink) canonicalLink.setAttribute("href", url.toString());
+  if (ogUrlMeta) ogUrlMeta.setAttribute("content", url.toString());
+  if (ogTitleMeta) ogTitleMeta.setAttribute("content", title);
+  if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", description);
+  if (twitterTitleMeta) twitterTitleMeta.setAttribute("content", title);
+  if (twitterDescriptionMeta) twitterDescriptionMeta.setAttribute("content", description);
+  if (imageAbsoluteUrl && ogImageMeta) ogImageMeta.setAttribute("content", imageAbsoluteUrl);
+  if (imageAbsoluteUrl && twitterImageMeta) twitterImageMeta.setAttribute("content", imageAbsoluteUrl);
+
+  if (structuredData) {
+    const priceValue =
+      typeof product.price === "number" && !Number.isNaN(product.price) ? String(product.price) : "0";
+
+    structuredData.textContent = `
+{
+  "@context": "https://schema.org",
+  "@type": "Product",
+  "name": "${escapeJsonString(product.name)}",
+  "description": "${escapeJsonString(product.description)}",
+  "category": "${escapeJsonString(product.categoria)}",
+  "image": ["${escapeJsonString(imageAbsoluteUrl)}"],
+  "brand": {
+    "@type": "Brand",
+    "name": "JoyasMunoz"
+  },
+  "offers": {
+    "@type": "Offer",
+    "priceCurrency": "CLP",
+    "price": "${priceValue}",
+    "availability": "https://schema.org/InStock",
+    "url": "${escapeJsonString(url.toString())}"
+  }
+}`.trim();
+  }
+}
+
 function renderProduct(product) {
   const container = document.querySelector("#productDetail");
   if (!container) return;
@@ -286,9 +376,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const catalog = await loadCatalog();
     const productId = new URLSearchParams(window.location.search).get("id") ?? "";
     const product = findProductById(catalog, productId);
+    updateProductSeo(product);
     renderProduct(product);
   } catch (error) {
     console.error(error);
+    updateProductSeo(null);
     renderProduct(null);
   }
 
