@@ -1,0 +1,96 @@
+[
+  {
+    "id": "media caña",
+    "name": "Esclava media caña ",
+    "description": "Eleva tu estilo cotidiano con nuestra pulsera de cobre puro al 100%. Con un acabado pulido y un diseño minimalista, esta pieza trasciende tendencias. Es el equilibrio perfecto entre la fuerza del metal y la sutileza de un clásico, diseñada para acompañarte con distinción en cada movimiento.",
+    "image": "assets/pulsera_mediacaña_cobre.jpeg",
+    "images": [
+      "assets/pulsera_mediacaña_cobre.jpeg",
+      "assets/pulsera_mediacaña_cobre_2.jpeg"
+    ],
+    "price": 10000,
+    "categoria": "Joyas de cobre",
+    "featured": true,
+    "consulted": true
+  },
+  {
+    "id": "Trenzado",
+    "name": "Esclava trenzada",
+    "description": "Descubre la belleza de lo hecho a mano. Esta esclava no es solo un accesorio; es una pieza donde el cobre puro se entrelaza para crear un relieve dinámico y lleno de carácter. Su diseño artesanal captura la luz desde todos los ángulos, convirtiéndola en una declaración de estilo auténtico y atemporal.",
+    "image": "assets/cobre_trenzado.jpeg",
+    "images": [
+      "assets/cobre_trenzado.jpeg"
+    ],
+    "price": 10000,
+    "categoria": "Joyas de cobre",
+    "featured": true,
+    "consulted": true
+  },
+  {
+    "id": "Esclava de plata",
+    "name": "Esclava de plata",
+    "description": "La elegancia no necesita gritar. Nuestra esclava de plata es una oda al minimalismo refinado. Con un pulido espejo que captura la esencia de la luz, esta pieza ha sido diseñada para quienes aprecian la belleza de las líneas puras. Un accesorio esencial que aporta un toque de distinción inmediata a cualquier atuendo, desde el día a día hasta los eventos más memorables.",
+    "image": "assets/esclava de plata 3.png",
+    "images": [
+      "assets/esclava de plata 3.png",
+      "assets/esclava de plata.png"
+    ],
+    "price": 79990,
+    "categoria": "Joyas de plata",
+    "featured": true,
+    "consulted": true
+  },
+  {
+    "id": "aros con moissanita ",
+    "name": "Aros Moissanita",
+    "description": "Descubre un brillo que desafía los límites. Nuestros aros de moissanita ofrecen un índice de refracción superior al del diamante, creando destellos de luz incomparables. Es la elección perfecta para la mujer moderna que busca el máximo lujo, durabilidad extrema y una alternativa ética sin comprometer la elegancia. Un destello que no solo se ve, sino que se siente.",
+    "image": "assets/aros.png",
+    "images": [
+      "assets/aros.png"
+    ],
+    "price": 90000  ,
+    "categoria": "Joyas de plata",
+    "featured": true,
+    "consulted": false
+  },
+  {
+    "id": "esclava lisa ",
+    "name": "Esclava Lisa",
+    "description": "Menos es más. Nuestra esclava lisa de cobre puro es la definición de la elegancia sin esfuerzo. Su superficie pulida y continua crea un espejo de tonos cálidos que se adapta con naturalidad a tu muñeca. Es esa pieza esencial que no compite con tu estilo, sino que lo completa con una sofisticación discreta y atemporal.",
+    "image": "assets/cobrelisa.png",
+    "images": [
+      "assets/cobrelisa.png"
+    ],
+    "price": 10000  ,
+    "categoria": "Joyas de cobre",
+    "featured": false,
+    "consulted": false
+  },
+  {
+    "id": "Esclava alpaca ",
+    "name": "Esclava Alpaca",
+    "description": "Para quienes buscan una joya que aguante su ritmo de vida sin perder el porte. Nuestra esclava de alpaca destaca por su robustez y un brillo plateado que se mantiene intacto frente al paso del tiempo. Es la pieza con carácter que necesitas: sólida, imperturbable y con ese aire industrial-elegante que nunca pasa de moda.",
+    "image": "assets/esclavaalpaca.png",
+    "images": [
+      "assets/esclavaalpaca.png"
+    ],
+    "price": 10000  ,
+    "categoria": "Joyas de alpaca",
+    "featured": true,
+    "consulted": false
+  },
+  {
+    "id": "Perlas ",
+    "name": "Collar Fabiola",
+    "description": "Collar de perlas de Rio, hecho a mano, con perlas de alta calidad seleccionadas con cuidado para garantizar su belleza y durabilidad. Cada perla es única, lo que hace que cada collar sea una pieza exclusiva y especial.",
+    "image": "assets/perlas.png",
+    "images": [
+      "assets/perlas.png",
+      "assets/perlas2.png"
+    ],
+    "price": 60000  ,
+    "categoria": "Perlas",
+    "featured": true,
+    "consulted": false
+  }
+]
