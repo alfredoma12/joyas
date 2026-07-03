@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://joyasmunoz.lat/</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/</loc>
+    <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/category.html?categoria=Joyas%20de%20cobre</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/category.html?categoria=Joyas%20de%20cobre</loc>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/category.html?categoria=Joyas%20de%20plata</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/category.html?categoria=Joyas%20de%20plata</loc>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/category.html?categoria=Joyas%20de%20alpaca</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/category.html?categoria=Joyas%20de%20alpaca</loc>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/category.html?categoria=Perlas</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/category.html?categoria=Perlas</loc>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/product.html?id=media%20ca%C3%B1a</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=media-cana</loc>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/product.html?id=Trenzado</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=trenzado</loc>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/product.html?id=Esclava%20de%20plata</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=esclava-de-plata</loc>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/product.html?id=aros%20con%20moissanita</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=aros-moissanita</loc>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/product.html?id=esclava%20lisa</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=esclava-lisa</loc>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/product.html?id=Esclava%20alpaca</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=esclava-alpaca</loc>
+    <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://joyasmunoz.lat/product.html?id=Perlas</loc>
+    <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=collar-fabiola</loc>
+    <priority>0.7</priority>
   </url>
 </urlset>

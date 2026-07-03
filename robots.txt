@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://joyasmunoz.lat/sitemap.xml
+Sitemap: https://xn--joyasmuoz-r6a.lat/sitemap.xml
