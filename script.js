@@ -1,261 +1,169 @@
-const whatsappBase = "https://wa.me/56949543511";
+/* ==========================================================================
+   JoyasMuñoz - página de inicio
+   ========================================================================== */
 
-async function loadCatalog() {
-  const response = await fetch(`./products.json?v=${Date.now()}`, { cache: "no-store" });
+let catalogCache = [];
 
-  if (!response.ok) {
-    throw new Error(`No se pudo cargar products.json (${response.status})`);
-  }
-
-  const data = await response.json();
-
-  if (!Array.isArray(data)) {
-    throw new Error("El archivo products.json debe contener un arreglo de productos.");
-  }
-
-  return data;
+function getActiveFilters() {
+  return {
+    query: normalizeText(document.querySelector("#searchInput")?.value || ""),
+    category: document.querySelector("[data-filter].active")?.dataset.filter || "all",
+  };
 }
 
-function buildWhatsAppLink(product) {
-  const title = product?.name ?? "Sin titulo";
-  const description = product?.description ?? "Sin descripcion";
-  const price = formatPrice(product?.price);
+function applyCatalogFilters() {
+  const grid = document.querySelector("#productGrid");
+  const count = document.querySelector("#catalogCount");
+  if (!grid) return;
 
-  const message = [
-    "Hola, quiero consultar la disponibilidad de esta joya:",
-    `Titulo: ${title}`,
-    `Descripcion: ${description}`,
-    `Precio: ${price}`,
-  ].join("\n");
+  const { query, category } = getActiveFilters();
+  const filtered = catalogCache.filter((product) => {
+    const matchesCategory = category === "all" || product.categoria === category;
+    const haystack = normalizeText(`${product.name} ${product.description} ${product.material} ${product.categoria}`);
+    return matchesCategory && haystack.includes(query);
+  });
 
-  return `${whatsappBase}?text=${encodeURIComponent(message)}`;
+  grid.innerHTML = filtered.length
+    ? filtered.map(renderProductCard).join("")
+    : `<article class="category-empty" data-reveal>
+        <h2>No encontramos joyas con esos filtros</h2>
+        <p>Prueba con otra categoría o busca por material, nombre o colección.</p>
+      </article>`;
+
+  if (count) count.textContent = `${filtered.length} joya${filtered.length === 1 ? "" : "s"} encontradas`;
+  setupRevealAnimations();
 }
 
-function formatPrice(price) {
-  if (typeof price !== "number" || Number.isNaN(price)) return "Precio a consultar";
-
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    maximumFractionDigits: 0,
-  }).format(price);
-}
-
-function buildProductDetailsLink(product) {
-  const productId = String(product?.id ?? "").trim();
-  return `product.html?id=${encodeURIComponent(productId)}`;
-}
-
-function getProductImages(product) {
-  const imageList = Array.isArray(product?.images)
-    ? product.images.map((image) => String(image ?? "").trim()).filter(Boolean)
-    : [];
-
-  if (imageList.length) return imageList;
-
-  const fallbackImage = String(product?.image ?? "").trim();
-  return fallbackImage ? [fallbackImage] : [];
-}
-
-function getPrimaryImage(product) {
-  return getProductImages(product)[0] ?? "";
-}
-
-function renderCollection(catalog) {
-  const container = document.querySelector("#productGrid");
-  if (!container) return;
-
-  container.innerHTML = catalog
+function renderFeaturedProducts() {
+  const grid = document.querySelector("#featuredGrid");
+  if (!grid) return;
+  const featured = catalogCache.filter((product) => product.featured).slice(0, 3);
+  grid.innerHTML = featured
     .map(
-      (item) => {
-        const primaryImage = getPrimaryImage(item);
-
-        return `
-      <article class="product-card" data-reveal>
-        <figure class="product-media">
-          <img src="${primaryImage}" alt="${item.name}" loading="lazy" decoding="async" fetchpriority="low" />
-        </figure>
-        <div class="product-content">
-          <p class="product-category">${item.categoria ?? "Sin categoria"}</p>
-          <h3>${item.name}</h3>
-          <p class="product-price">${formatPrice(item.price)}</p>
-          <div class="product-actions">
-            <a class="btn" href="${buildProductDetailsLink(item)}">Ver detalle</a>
-            <a
-              class="btn"
-              href="${buildWhatsAppLink(item)}"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Consultar disponibilidad
-            </a>
-          </div>
+      (product) => `
+      <article class="featured-card" data-reveal>
+        <img src="${getPrimaryImage(product)}" alt="${product.name}" loading="lazy" decoding="async" width="680" height="760" />
+        <div class="featured-content">
+          <p>${product.categoria}</p>
+          <h3>${product.name}</h3>
+          <a class="btn btn-primary" href="${buildProductDetailsLink(product)}">Ver joya</a>
         </div>
-      </article>
-    `;
-      }
+      </article>`
     )
     .join("");
 }
 
-function setupCategoryDropdown(catalog) {
-  const dropdown = document.querySelector("#categoryDropdown");
-  const toggle = document.querySelector("#categoryToggle");
-  const categoryLinks = document.querySelectorAll("#categoryMenu a[data-category]");
-
-  if (!dropdown || !toggle || !categoryLinks.length || !Array.isArray(catalog)) return;
-
-  const closeDropdown = () => {
-    dropdown.classList.remove("open");
-    toggle.setAttribute("aria-expanded", "false");
-  };
-
-  toggle.addEventListener("click", () => {
-    const isOpen = dropdown.classList.toggle("open");
-    toggle.setAttribute("aria-expanded", String(isOpen));
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!dropdown.contains(event.target)) {
-      closeDropdown();
-    }
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeDropdown();
-    }
-  });
-
-  categoryLinks.forEach((link) => {
-    link.addEventListener("click", closeDropdown);
-  });
-}
-
-function renderCollectionSkeletons() {
-  const container = document.querySelector("#productGrid");
-  if (!container) return;
-
-  container.innerHTML = Array.from({ length: 6 })
+function renderBestSellers() {
+  const grid = document.querySelector("#bestSellerGrid");
+  if (!grid) return;
+  const consulted = catalogCache.filter((product) => product.consulted).slice(0, 3);
+  grid.innerHTML = consulted
     .map(
-      () => `
-      <article class="product-card skeleton-card" aria-hidden="true">
-        <div class="skeleton-media skeleton-shimmer"></div>
-        <div class="product-content">
-          <div class="skeleton-line skeleton-shimmer skeleton-title"></div>
-          <div class="skeleton-line skeleton-shimmer"></div>
-          <div class="skeleton-line skeleton-shimmer skeleton-short"></div>
-          <div class="skeleton-line skeleton-shimmer skeleton-price"></div>
-          <div class="skeleton-button skeleton-shimmer"></div>
+      (product) => `
+      <article class="consulted-card" data-reveal>
+        <a class="consulted-image" href="${buildProductDetailsLink(product)}">
+          <img src="${getPrimaryImage(product)}" alt="${product.name}" loading="lazy" decoding="async" />
+        </a>
+        <div class="consulted-content">
+          <p class="product-category">${product.material}</p>
+          <h3>${product.name}</h3>
+          <p>${formatPrice(product.price)}</p>
+          <button type="button" class="btn btn-ghost" data-add-to-cart="${product.id}">Agregar a la cesta</button>
         </div>
-      </article>
-    `
+      </article>`
     )
     .join("");
 }
 
-function setupNavbar() {
-  const navbar = document.querySelector("#navbar");
-  if (!navbar) return;
-
-  const onScroll = () => {
-    navbar.classList.toggle("scrolled", window.scrollY > 24);
-  };
-
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
-}
-
-function setupMobileMenu() {
-  const menuToggle = document.querySelector("#menuToggle");
-  const navMenu = document.querySelector("#navMenu");
-  const mobileBreakpoint = 980;
-
-  if (!menuToggle || !navMenu) return;
-
-  menuToggle.addEventListener("click", () => {
-    const isOpen = navMenu.classList.toggle("open");
-    menuToggle.setAttribute("aria-expanded", String(isOpen));
-    menuToggle.setAttribute("aria-label", isOpen ? "Cerrar menu" : "Abrir menu");
-    document.body.style.overflow = isOpen ? "hidden" : "";
-  });
-
-  navMenu.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      navMenu.classList.remove("open");
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Abrir menu");
-      document.body.style.overflow = "";
+function setupCatalogControls() {
+  document.querySelector("#searchInput")?.addEventListener("input", applyCatalogFilters);
+  document.querySelectorAll("[data-filter]").forEach((button) => {
+    button.addEventListener("click", () => {
+      document.querySelectorAll("[data-filter]").forEach((item) => item.classList.remove("active"));
+      button.classList.add("active");
+      applyCatalogFilters();
     });
   });
-
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > mobileBreakpoint) {
-      navMenu.classList.remove("open");
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Abrir menu");
-      document.body.style.overflow = "";
-    }
-  });
 }
 
-function setupRevealAnimations() {
-  const revealElements = document.querySelectorAll("[data-reveal]");
-  if (!revealElements.length) return;
+function renderTestimonials() {
+  const container = document.querySelector("#testimonialGrid");
+  if (!container) return;
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
+  const testimonials = [
+    ["La atención fue rápida y muy cuidadosa. Me ayudaron a elegir una esclava de cobre preciosa.", "Camila R."],
+    ["Compré una pieza de plata para regalo y llegó impecable. Se nota el detalle del pulido.", "Francisco M."],
+    ["El collar de perlas se ve fino y delicado. La consulta por WhatsApp fue clara desde el inicio.", "Valentina S."],
+  ];
+
+  container.innerHTML = testimonials
+    .map(
+      ([quote, author]) => `
+      <article class="testimonial-card" data-reveal>
+        <p>“${quote}”</p>
+        <span>${author}</span>
+      </article>`
+    )
+    .join("");
+}
+
+function renderHomeJsonLd() {
+  const script = document.querySelector("#homeStructuredData");
+  if (!script) return;
+  script.textContent = createJsonLd([
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: SITE.name,
+      url: SITE.domain,
+      logo: absoluteUrl("assets/diamond-favicon.svg"),
+      contactPoint: {
+        "@type": "ContactPoint",
+        telephone: "+56 9 4954 3511",
+        contactType: "customer service",
+        areaServed: "CL",
+        availableLanguage: "Spanish",
+      },
+      sameAs: [SITE.whatsappBase],
     },
     {
-      threshold: 0.16,
-      rootMargin: "0px 0px -30px 0px",
-    }
-  );
-
-  revealElements.forEach((element, index) => {
-    element.style.transitionDelay = `${Math.min(index * 30, 260)}ms`;
-    observer.observe(element);
-  });
-}
-
-function setupYear() {
-  const yearElement = document.querySelector("#year");
-  if (yearElement) {
-    yearElement.textContent = String(new Date().getFullYear());
-  }
-}
-
-function renderCatalogError() {
-  const message =
-    "No fue posible cargar los productos. Verifica products.json y abre el sitio desde un servidor local.";
-
-  ["#productGrid"].forEach((selector) => {
-    const container = document.querySelector(selector);
-    if (container) {
-      container.innerHTML = `<p>${message}</p>`;
-    }
-  });
+      "@context": "https://schema.org",
+      "@type": "JewelryStore",
+      name: SITE.name,
+      url: SITE.domain,
+      image: absoluteUrl(SITE.defaultImage),
+      telephone: "+56 9 4954 3511",
+      address: { "@type": "PostalAddress", addressCountry: "CL" },
+      priceRange: "$$",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Inicio", item: SITE.domain },
+      ],
+    },
+  ]);
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  setupNavbar();
-  setupMobileMenu();
-  setupYear();
-  renderCollectionSkeletons();
+  setupCommonUI();
+  setupAddToCartButtons(() => catalogCache);
+  setupCatalogControls();
+  renderTestimonials();
+  renderHomeJsonLd();
 
   try {
-    const catalog = await loadCatalog();
-    renderCollection(catalog);
-    setupCategoryDropdown(catalog);
+    catalogCache = await loadCatalog();
+    renderFeaturedProducts();
+    renderBestSellers();
+    applyCatalogFilters();
   } catch (error) {
     console.error(error);
-    renderCatalogError();
+    const grid = document.querySelector("#productGrid");
+    if (grid) {
+      grid.innerHTML = `<p>No fue posible cargar los productos. Abre el sitio desde un servidor local para probar el catálogo.</p>`;
+    }
   }
 
   setupRevealAnimations();

@@ -1,96 +1,139 @@
 [
   {
-    "id": "media caña",
-    "name": "Esclava media caña ",
-    "description": "Eleva tu estilo cotidiano con nuestra pulsera de cobre puro al 100%. Con un acabado pulido y un diseño minimalista, esta pieza trasciende tendencias. Es el equilibrio perfecto entre la fuerza del metal y la sutileza de un clásico, diseñada para acompañarte con distinción en cada movimiento.",
-    "image": "assets/pulsera_mediacaña_cobre.jpeg",
+    "id": "media-cana",
+    "name": "Esclava Media Caña",
+    "description": "Pulsera de cobre puro con acabado pulido y diseño minimalista. Una pieza cálida, sobria y atemporal para acompañar el uso diario con distinción.",
+    "image": "assets/optimized/esclava-media-cana-cobre.webp",
     "images": [
-      "assets/pulsera_mediacaña_cobre.jpeg",
-      "assets/pulsera_mediacaña_cobre_2.jpeg"
+      "assets/optimized/esclava-media-cana-cobre.webp",
+      "assets/optimized/esclava-media-cana-cobre-alt.webp"
     ],
     "price": 7000,
     "categoria": "Joyas de cobre",
+    "material": "Cobre puro",
+    "stock": true,
+    "tags": ["novedad"],
     "featured": true,
     "consulted": true
   },
   {
-    "id": "Trenzado",
-    "name": "Esclava trenzada",
-    "description": "Descubre la belleza de lo hecho a mano. Esta esclava no es solo un accesorio; es una pieza donde el cobre puro se entrelaza para crear un relieve dinámico y lleno de carácter. Su diseño artesanal captura la luz desde todos los ángulos, convirtiéndola en una declaración de estilo auténtico y atemporal.",
-    "image": "assets/cobre_trenzado.jpeg",
-    "images": [
-      "assets/cobre_trenzado.jpeg"
-    ],
+    "id": "trenzado",
+    "name": "Esclava Trenzada",
+    "description": "Esclava artesanal de cobre puro con textura trenzada y relieve luminoso. Una joya con carácter, ideal para quienes buscan diseño auténtico.",
+    "image": "assets/optimized/esclava-trenzada-cobre.webp",
+    "images": ["assets/optimized/esclava-trenzada-cobre.webp"],
     "price": 7000,
     "categoria": "Joyas de cobre",
+    "material": "Cobre puro",
+    "stock": true,
+    "tags": [],
     "featured": true,
     "consulted": true
   },
   {
-    "id": "Esclava de plata",
-    "name": "Esclava de plata",
-    "description": "La elegancia no necesita gritar. Nuestra esclava de plata es una oda al minimalismo refinado. Con un pulido espejo que captura la esencia de la luz, esta pieza ha sido diseñada para quienes aprecian la belleza de las líneas puras. Un accesorio esencial que aporta un toque de distinción inmediata a cualquier atuendo, desde el día a día hasta los eventos más memorables.",
-    "image": "assets/esclava de plata 3.png",
+    "id": "esclava-de-plata",
+    "name": "Esclava de Plata",
+    "description": "Esclava de plata 925 con pulido espejo y líneas puras. Una pieza refinada, versátil y elegante para regalos memorables o uso cotidiano.",
+    "image": "assets/optimized/esclava-plata-925.webp",
     "images": [
-      "assets/esclava de plata 3.png",
-      "assets/esclava de plata.png"
+      "assets/optimized/esclava-plata-925.webp",
+      "assets/optimized/esclava-plata-925-alt.webp"
     ],
     "price": 79990,
     "categoria": "Joyas de plata",
+    "material": "Plata 925",
+    "stock": true,
+    "tags": ["oferta"],
     "featured": true,
     "consulted": true
   },
   {
-    "id": "aros con moissanita ",
+    "id": "aros-moissanita",
     "name": "Aros Moissanita",
-    "description": "Descubre un brillo que desafía los límites. Nuestros aros de moissanita ofrecen un índice de refracción superior al del diamante, creando destellos de luz incomparables. Es la elección perfecta para la mujer moderna que busca el máximo lujo, durabilidad extrema y una alternativa ética sin comprometer la elegancia. Un destello que no solo se ve, sino que se siente.",
-    "image": "assets/aros.png",
-    "images": [
-      "assets/aros.png"
-    ],
-    "price": 90000  ,
+    "description": "Aros de plata 925 con moissanita, brillo intenso y una presencia sofisticada. Una alternativa elegante, durable y de gran luminosidad.",
+    "image": "assets/optimized/aros-moissanita.webp",
+    "images": ["assets/optimized/aros-moissanita.webp"],
+    "price": 90000,
     "categoria": "Joyas de plata",
+    "material": "Plata 925 con moissanita",
+    "stock": true,
+    "tags": ["novedad"],
     "featured": true,
     "consulted": false
   },
   {
-    "id": "esclava lisa ",
+    "id": "esclava-lisa",
     "name": "Esclava Lisa",
-    "description": "Menos es más. Nuestra esclava lisa de cobre puro es la definición de la elegancia sin esfuerzo. Su superficie pulida y continua crea un espejo de tonos cálidos que se adapta con naturalidad a tu muñeca. Es esa pieza esencial que no compite con tu estilo, sino que lo completa con una sofisticación discreta y atemporal.",
-    "image": "assets/cobrelisa.png",
+    "description": "Esclava lisa de cobre puro, pulida y continua. Un básico sofisticado que suma calidez y elegancia sin recargar el estilo.",
+    "image": "assets/optimized/esclava-lisa-cobre.webp",
     "images": [
-      "assets/esclavalisa.png",
-      "assets/cobrelisa.png"
+      "assets/optimized/esclava-lisa-cobre.webp",
+      "assets/optimized/esclava-lisa-cobre-alt.webp"
     ],
-    "price": 7000  ,
+    "price": 7000,
     "categoria": "Joyas de cobre",
+    "material": "Cobre puro",
+    "stock": true,
+    "tags": [],
     "featured": false,
     "consulted": false
   },
   {
-    "id": "Esclava alpaca ",
+    "id": "esclava-alpaca",
     "name": "Esclava Alpaca",
-    "description": "Para quienes buscan una joya que aguante su ritmo de vida sin perder el porte. Nuestra esclava de alpaca destaca por su robustez y un brillo plateado que se mantiene intacto frente al paso del tiempo. Es la pieza con carácter que necesitas: sólida, imperturbable y con ese aire industrial-elegante que nunca pasa de moda.",
-    "image": "assets/esclavaalpaca.png",
-    "images": [
-      "assets/esclavaalpaca.png"
-    ],
-    "price": 7000  ,
+    "description": "Esclava de alpaca con brillo plateado y presencia firme. Una pieza resistente, sobria y moderna para estilos con personalidad.",
+    "image": "assets/optimized/esclava-alpaca.webp",
+    "images": ["assets/optimized/esclava-alpaca.webp"],
+    "price": 7000,
     "categoria": "Joyas de alpaca",
+    "material": "Alpaca",
+    "stock": true,
+    "tags": [],
     "featured": true,
     "consulted": false
   },
   {
-    "id": "Perlas ",
+    "id": "collar-fabiola",
     "name": "Collar Fabiola",
-    "description": "Collar de perlas de Rio, hecho a mano, con perlas de alta calidad seleccionadas con cuidado para garantizar su belleza y durabilidad. Cada perla es única, lo que hace que cada collar sea una pieza exclusiva y especial.",
-    "image": "assets/perlas.png",
+    "description": "Collar de perlas de río hecho a mano, con piezas seleccionadas por su brillo, forma y delicadeza. Una joya clásica con acabado exclusivo.",
+    "image": "assets/optimized/collar-perlas-rio.webp",
     "images": [
-      "assets/perlas.png",
-      "assets/perlas2.png"
+      "assets/optimized/collar-perlas-rio.webp",
+      "assets/optimized/collar-perlas-rio-alt.webp"
     ],
-    "price": 60000  ,
+    "price": 60000,
     "categoria": "Perlas",
+    "material": "Perlas de río",
+    "stock": true,
+    "tags": ["novedad"],
+    "featured": true,
+    "consulted": false
+  },
+  {
+    "id": "pulsera-cobre-lapislazuli",
+    "name": "Pulsera De Cobre Artesanal Con Lapislázuli",
+    "description": "Eleva tu estilo con esta pulsera artesanal, una pieza única que combina la calidez y el brillo del cobre chileno con la profunda elegancia mística del lapislázuli",
+    "image": "assets/optimized/Pulsera De Cobre Artesanal Con Lapislázuli.jpeg",
+    "images": ["assets/optimized/Pulsera De Cobre Artesanal Con Lapislázuli.jpeg"],
+    "price": 15000,
+    "categoria": "Joyas de cobre",
+    "material": "Cobre puro y lapislázuli",
+    "stock": true,
+    "tags": ["novedad"],
+    "featured": true,
+    "consulted": false
+  },
+  {
+    "id": "aros-lapislazuli-natural-cobre",
+    "name": "Aros De Lapislázuli Natural Artesanales En Cobre",
+    "description": "Aros artesanales de cobre que combinan la calidez del metal con el azul profundo y natural del lapislázuli. Una pieza única para dar un toque especial a tu estilo.",
+    "image": "assets/optimized/aros.jpeg",
+    "images": ["assets/optimized/aros.jpeg"],
+    "price": 20000,
+    "categoria": "Joyas de cobre",
+    "material": "Cobre y lapislázuli natural",
+    "stock": true,
+    "tags": ["novedad"],
     "featured": true,
     "consulted": false
   }

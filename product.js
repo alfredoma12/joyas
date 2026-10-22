@@ -1,143 +1,74 @@
-const whatsappBase = "https://wa.me/56949543511";
+/* ==========================================================================
+   JoyasMuñoz - ficha de producto
+   ========================================================================== */
 
-async function loadCatalog() {
-  const response = await fetch(`./products.json?v=${Date.now()}`, { cache: "no-store" });
-  if (!response.ok) throw new Error(`No se pudo cargar products.json (${response.status})`);
-
-  const data = await response.json();
-  if (!Array.isArray(data)) throw new Error("El archivo products.json debe contener un arreglo.");
-
-  return data;
-}
-
-function formatPrice(price) {
-  if (typeof price !== "number" || Number.isNaN(price)) return "Precio a consultar";
-
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-    maximumFractionDigits: 0,
-  }).format(price);
-}
-
-function buildWhatsAppLink(product) {
-  const message = [
-    "Hola, quiero consultar la disponibilidad de esta joya:",
-    `Titulo: ${product?.name ?? "Sin titulo"}`,
-    `Descripcion: ${product?.description ?? "Sin descripcion"}`,
-    `Precio: ${formatPrice(product?.price)}`,
-  ].join("\n");
-
-  return `${whatsappBase}?text=${encodeURIComponent(message)}`;
-}
-
-function findProductById(catalog, productId) {
-  const normalizedId = (productId ?? "").trim().toLowerCase();
-  return catalog.find((item) => String(item?.id ?? "").trim().toLowerCase() === normalizedId);
-}
-
-function getProductImages(product) {
-  const imageList = Array.isArray(product?.images)
-    ? product.images.map((image) => String(image ?? "").trim()).filter(Boolean)
-    : [];
-
-  if (imageList.length) return imageList;
-
-  const fallbackImage = String(product?.image ?? "").trim();
-  return fallbackImage ? [fallbackImage] : [];
-}
-
-function getPrimaryImage(product) {
-  return getProductImages(product)[0] ?? "";
-}
-
-function escapeJsonString(value) {
-  return String(value ?? "")
-    .replace(/\\/g, "\\\\")
-    .replace(/"/g, '\\"')
-    .replace(/\n/g, " ")
-    .trim();
-}
+let productCatalog = [];
 
 function updateProductSeo(product) {
-  const baseUrl = "https://joyasmunoz.lat/product.html";
-  const canonicalLink = document.querySelector("#canonicalLink");
-  const ogUrlMeta = document.querySelector("#ogUrlMeta");
-  const ogImageMeta = document.querySelector("#ogImageMeta");
-  const twitterImageMeta = document.querySelector("#twitterImageMeta");
-  const descriptionMeta = document.querySelector('meta[name="description"]');
-  const robotsMeta = document.querySelector('meta[name="robots"]');
-  const ogTitleMeta = document.querySelector('meta[property="og:title"]');
-  const ogDescriptionMeta = document.querySelector('meta[property="og:description"]');
-  const twitterTitleMeta = document.querySelector('meta[name="twitter:title"]');
-  const twitterDescriptionMeta = document.querySelector('meta[name="twitter:description"]');
-  const structuredData = document.querySelector("#productStructuredData");
+  const baseUrl = `${SITE.domain}/product.html`;
+  const url = new URL(baseUrl);
+  if (product?.id) url.searchParams.set("id", product.id);
 
   if (!product) {
-    document.title = "Producto no encontrado | JoyasMunoz";
-    if (descriptionMeta) {
-      descriptionMeta.setAttribute("content", "El producto solicitado no se encuentra disponible en este momento.");
-    }
-    if (robotsMeta) robotsMeta.setAttribute("content", "noindex,follow");
-    if (canonicalLink) canonicalLink.setAttribute("href", baseUrl);
-    if (ogUrlMeta) ogUrlMeta.setAttribute("content", baseUrl);
-    if (ogTitleMeta) ogTitleMeta.setAttribute("content", "Producto no encontrado | JoyasMunoz");
-    if (ogDescriptionMeta) {
-      ogDescriptionMeta.setAttribute("content", "El producto solicitado no se encuentra disponible en este momento.");
-    }
-    if (twitterTitleMeta) twitterTitleMeta.setAttribute("content", "Producto no encontrado | JoyasMunoz");
-    if (twitterDescriptionMeta) {
-      twitterDescriptionMeta.setAttribute("content", "El producto solicitado no se encuentra disponible en este momento.");
-    }
-    if (structuredData) structuredData.textContent = "";
+    document.title = "Producto no encontrado | JoyasMuñoz";
+    setMeta('meta[name="robots"]', "noindex,follow");
+    setMeta('meta[name="description"]', "El producto solicitado no está disponible en este momento.");
+    setMeta("#canonicalLink", baseUrl, "href");
     return;
   }
 
-  const url = new URL(baseUrl);
-  url.searchParams.set("id", String(product.id ?? "").trim());
-
-  const imagePath = getPrimaryImage(product);
-  const imageAbsoluteUrl = imagePath ? `https://joyasmunoz.lat/${String(imagePath).replace(/^\//, "")}` : "";
-  const title = `${product.name} | JoyasMunoz`;
-  const description = (product.description || "Descubre esta joya exclusiva en JoyasMunoz.").slice(0, 155);
+  const title = `${product.name} ${product.material} | JoyasMuñoz`;
+  const description = `${product.description} Consulta disponibilidad por WhatsApp en JoyasMuñoz.`.slice(0, 158);
+  const image = absoluteUrl(getPrimaryImage(product));
 
   document.title = title;
+  setMeta('meta[name="description"]', description);
+  setMeta('meta[name="keywords"]', `${product.name}, ${product.material}, ${product.categoria}, joyas Chile, JoyasMuñoz`);
+  setMeta('meta[name="robots"]', "index,follow");
+  setMeta("#canonicalLink", url.toString(), "href");
+  setMeta("#ogUrlMeta", url.toString());
+  setMeta("#ogImageMeta", image);
+  setMeta("#twitterImageMeta", image);
+  setMeta('meta[property="og:title"]', title);
+  setMeta('meta[property="og:description"]', description);
+  setMeta('meta[name="twitter:title"]', title);
+  setMeta('meta[name="twitter:description"]', description);
 
-  if (descriptionMeta) descriptionMeta.setAttribute("content", description);
-  if (robotsMeta) robotsMeta.setAttribute("content", "index,follow");
-  if (canonicalLink) canonicalLink.setAttribute("href", url.toString());
-  if (ogUrlMeta) ogUrlMeta.setAttribute("content", url.toString());
-  if (ogTitleMeta) ogTitleMeta.setAttribute("content", title);
-  if (ogDescriptionMeta) ogDescriptionMeta.setAttribute("content", description);
-  if (twitterTitleMeta) twitterTitleMeta.setAttribute("content", title);
-  if (twitterDescriptionMeta) twitterDescriptionMeta.setAttribute("content", description);
-  if (imageAbsoluteUrl && ogImageMeta) ogImageMeta.setAttribute("content", imageAbsoluteUrl);
-  if (imageAbsoluteUrl && twitterImageMeta) twitterImageMeta.setAttribute("content", imageAbsoluteUrl);
-
+  const structuredData = document.querySelector("#productStructuredData");
   if (structuredData) {
-    const priceValue =
-      typeof product.price === "number" && !Number.isNaN(product.price) ? String(product.price) : "0";
-
-    structuredData.textContent = `
-{
-  "@context": "https://schema.org",
-  "@type": "Product",
-  "name": "${escapeJsonString(product.name)}",
-  "description": "${escapeJsonString(product.description)}",
-  "category": "${escapeJsonString(product.categoria)}",
-  "image": ["${escapeJsonString(imageAbsoluteUrl)}"],
-  "brand": {
-    "@type": "Brand",
-    "name": "JoyasMunoz"
-  },
-  "offers": {
-    "@type": "Offer",
-    "priceCurrency": "CLP",
-    "price": "${priceValue}",
-    "availability": "https://schema.org/InStock",
-    "url": "${escapeJsonString(url.toString())}"
-  }
-}`.trim();
+    structuredData.textContent = createJsonLd([
+      {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: product.name,
+        description: product.description,
+        category: product.categoria,
+        material: product.material,
+        image: getProductImages(product).map(absoluteUrl),
+        brand: { "@type": "Brand", name: SITE.name },
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "CLP",
+          price: String(product.price || 0),
+          availability: product.stock === false ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
+          url: url.toString(),
+        },
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Inicio", item: SITE.domain },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: product.categoria,
+            item: `${SITE.domain}/category.html?categoria=${encodeURIComponent(product.categoria)}`,
+          },
+          { "@type": "ListItem", position: 3, name: product.name, item: url.toString() },
+        ],
+      },
+    ]);
   }
 }
 
@@ -148,234 +79,106 @@ function renderProduct(product) {
   if (!product) {
     container.innerHTML = `
       <article class="category-empty" data-reveal>
-        <h2>Producto no encontrado</h2>
-        <p>El enlace puede estar incompleto o el producto ya no esta disponible.</p>
-        <a class="btn btn-primary" href="index.html#coleccion">Volver a la coleccion</a>
-      </article>
-    `;
+        <h1>Producto no encontrado</h1>
+        <p>El enlace puede estar incompleto o la joya ya no está disponible.</p>
+        <a class="btn btn-primary" href="index.html#coleccion">Volver a la colección</a>
+      </article>`;
     return;
   }
 
+  renderBreadcrumbs([
+    { name: "Inicio", url: "index.html" },
+    { name: product.categoria, url: `category.html?categoria=${encodeURIComponent(product.categoria)}` },
+    { name: product.name, url: window.location.href },
+  ]);
+
   const images = getProductImages(product);
-
-  const slides = images
-    .map(
-      (image, index) => `
-      <div class="detail-slide" aria-hidden="${index === 0 ? "false" : "true"}">
-        <img
-          src="${image}"
-          alt="Vista ${index + 1} de ${product.name}"
-          loading="${index === 0 ? "eager" : "lazy"}"
-          decoding="async"
-          fetchpriority="${index === 0 ? "high" : "low"}"
-        />
-      </div>
-    `
-    )
-    .join("");
-
-  const dots = images
-    .map(
-      (_, index) => `
-      <button
-        class="detail-dot ${index === 0 ? "active" : ""}"
-        type="button"
-        data-index="${index}"
-        aria-label="Ir a imagen ${index + 1}"
-      ></button>
-    `
-    )
-    .join("");
-
-  const showControls = images.length > 1;
+  const badges = buildProductBadges(product);
 
   container.innerHTML = `
     <article class="product-detail-card" data-reveal>
-      <section class="detail-gallery">
-        <div class="detail-carousel" aria-label="Galeria del producto">
-          <div class="detail-track" id="detailTrack">${slides}</div>
+      <section class="detail-gallery" aria-label="Galería de ${product.name}">
+        <div class="detail-carousel">
+          <div class="detail-track" id="detailTrack">
+            ${images
+              .map(
+                (image, index) => `
+                <div class="detail-slide" aria-hidden="${index === 0 ? "false" : "true"}">
+                  <img src="${image}" alt="${product.name}, vista ${index + 1}" loading="${index === 0 ? "eager" : "lazy"}" decoding="async" fetchpriority="${index === 0 ? "high" : "low"}" />
+                </div>`
+              )
+              .join("")}
+          </div>
           ${
-            showControls
-              ? `<button class="carousel-control prev" id="carouselPrev" type="button" aria-label="Imagen anterior">&#10094;</button>
-                 <button class="carousel-control next" id="carouselNext" type="button" aria-label="Imagen siguiente">&#10095;</button>`
+            images.length > 1
+              ? `<button class="carousel-control prev" id="carouselPrev" type="button" aria-label="Imagen anterior">‹</button>
+                 <button class="carousel-control next" id="carouselNext" type="button" aria-label="Imagen siguiente">›</button>`
               : ""
           }
         </div>
-        ${showControls ? `<div class="detail-dots" id="detailDots">${dots}</div>` : ""}
+        ${
+          images.length > 1
+            ? `<div class="detail-dots" id="detailDots">
+                ${images
+                  .map(
+                    (_, index) =>
+                      `<button class="detail-dot ${index === 0 ? "active" : ""}" type="button" data-index="${index}" aria-label="Ver imagen ${index + 1}"></button>`
+                  )
+                  .join("")}
+              </div>`
+            : ""
+        }
       </section>
       <section class="detail-info">
-        <p class="product-category">${product.categoria ?? "Sin categoria"}</p>
+        <div class="product-badges static">${badges}</div>
+        <p class="product-category">${product.categoria}</p>
         <h1>${product.name}</h1>
         <p class="detail-price">${formatPrice(product.price)}</p>
-        <p class="detail-description">${product.description ?? ""}</p>
+        <p class="detail-description">${product.description}</p>
+        <dl class="detail-specs">
+          <div><dt>Material</dt><dd>${product.material}</dd></div>
+          <div><dt>Stock</dt><dd>${stockLabel(product)}</dd></div>
+          <div><dt>Consulta</dt><dd>Sin pago online, coordinación por WhatsApp</dd></div>
+        </dl>
         <div class="detail-actions">
-          <a class="btn btn-primary" href="${buildWhatsAppLink(product)}" target="_blank" rel="noopener noreferrer">
-            Consultar por WhatsApp
-          </a>
+          <button type="button" class="btn btn-primary" data-add-to-cart="${product.id}">Agregar a la cesta</button>
+          <button type="button" class="btn btn-ghost" id="quickWhatsApp">Consultar esta joya</button>
         </div>
       </section>
-    </article>
-  `;
+    </article>`;
 
-  if (!showControls) return;
+  document.querySelector("#quickWhatsApp")?.addEventListener("click", () => {
+    Cart.add(product);
+    window.open(Cart.buildWhatsAppLink(), "_blank", "noopener,noreferrer");
+  });
 
+  setupCarousel(images.length);
+}
+
+function setupCarousel(totalImages) {
+  if (totalImages <= 1) return;
   const track = document.querySelector("#detailTrack");
-  const prevButton = document.querySelector("#carouselPrev");
-  const nextButton = document.querySelector("#carouselNext");
-  const dotButtons = document.querySelectorAll(".detail-dot");
-  const carousel = document.querySelector(".detail-carousel");
-  let currentIndex = 0;
+  const dots = document.querySelectorAll(".detail-dot");
+  let current = 0;
 
-  const goToSlide = (index) => {
-    if (!track) return;
-
-    const total = images.length;
-    currentIndex = (index + total) % total;
-    track.style.transform = `translateX(-${currentIndex * 100}%)`;
-
-    dotButtons.forEach((dot, dotIndex) => {
-      dot.classList.toggle("active", dotIndex === currentIndex);
-    });
+  const goTo = (index) => {
+    current = (index + totalImages) % totalImages;
+    if (track) track.style.transform = `translateX(-${current * 100}%)`;
+    dots.forEach((dot, dotIndex) => dot.classList.toggle("active", dotIndex === current));
   };
 
-  prevButton?.addEventListener("click", () => goToSlide(currentIndex - 1));
-  nextButton?.addEventListener("click", () => goToSlide(currentIndex + 1));
-
-  dotButtons.forEach((button, index) => {
-    button.addEventListener("click", () => goToSlide(index));
-  });
-
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  const minSwipeDistance = 40;
-
-  carousel?.addEventListener(
-    "touchstart",
-    (event) => {
-      touchStartX = event.changedTouches[0]?.clientX ?? 0;
-    },
-    { passive: true }
-  );
-
-  carousel?.addEventListener(
-    "touchend",
-    (event) => {
-      touchEndX = event.changedTouches[0]?.clientX ?? 0;
-      const distance = touchStartX - touchEndX;
-
-      if (Math.abs(distance) < minSwipeDistance) return;
-
-      if (distance > 0) {
-        goToSlide(currentIndex + 1);
-      } else {
-        goToSlide(currentIndex - 1);
-      }
-    },
-    { passive: true }
-  );
-}
-
-function setupNavbar() {
-  const navbar = document.querySelector("#navbar");
-  if (!navbar) return;
-
-  const onScroll = () => {
-    navbar.classList.toggle("scrolled", window.scrollY > 24);
-  };
-
-  onScroll();
-  window.addEventListener("scroll", onScroll, { passive: true });
-}
-
-function setupMobileMenu() {
-  const menuToggle = document.querySelector("#menuToggle");
-  const navMenu = document.querySelector("#navMenu");
-
-  if (!menuToggle || !navMenu) return;
-
-  menuToggle.addEventListener("click", () => {
-    const isOpen = navMenu.classList.toggle("open");
-    menuToggle.setAttribute("aria-expanded", String(isOpen));
-    menuToggle.setAttribute("aria-label", isOpen ? "Cerrar menu" : "Abrir menu");
-    document.body.style.overflow = isOpen ? "hidden" : "";
-  });
-
-  navMenu.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      navMenu.classList.remove("open");
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Abrir menu");
-      document.body.style.overflow = "";
-    });
-  });
-}
-
-function setupCategoryDropdown() {
-  const dropdown = document.querySelector("#categoryDropdown");
-  const toggle = document.querySelector("#categoryToggle");
-
-  if (!dropdown || !toggle) return;
-
-  const closeDropdown = () => {
-    dropdown.classList.remove("open");
-    toggle.setAttribute("aria-expanded", "false");
-  };
-
-  toggle.addEventListener("click", () => {
-    const isOpen = dropdown.classList.toggle("open");
-    toggle.setAttribute("aria-expanded", String(isOpen));
-  });
-
-  document.addEventListener("click", (event) => {
-    if (!dropdown.contains(event.target)) closeDropdown();
-  });
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeDropdown();
-  });
-}
-
-function setupRevealAnimations() {
-  const revealElements = document.querySelectorAll("[data-reveal]");
-  if (!revealElements.length) return;
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    {
-      threshold: 0.16,
-      rootMargin: "0px 0px -30px 0px",
-    }
-  );
-
-  revealElements.forEach((element, index) => {
-    element.style.transitionDelay = `${Math.min(index * 30, 260)}ms`;
-    observer.observe(element);
-  });
-}
-
-function setupYear() {
-  const yearElement = document.querySelector("#year");
-  if (yearElement) yearElement.textContent = String(new Date().getFullYear());
+  document.querySelector("#carouselPrev")?.addEventListener("click", () => goTo(current - 1));
+  document.querySelector("#carouselNext")?.addEventListener("click", () => goTo(current + 1));
+  dots.forEach((dot, index) => dot.addEventListener("click", () => goTo(index)));
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  setupNavbar();
-  setupMobileMenu();
-  setupCategoryDropdown();
-  setupYear();
+  setupCommonUI();
+  setupAddToCartButtons(() => productCatalog);
 
   try {
-    const catalog = await loadCatalog();
-    const productId = new URLSearchParams(window.location.search).get("id") ?? "";
-    const product = findProductById(catalog, productId);
+    productCatalog = await loadCatalog();
+    const product = findProductById(productCatalog, new URLSearchParams(window.location.search).get("id"));
     updateProductSeo(product);
     renderProduct(product);
   } catch (error) {
