@@ -12,14 +12,26 @@ function updateCategorySeo(category, count) {
   const url = new URL(`${SITE.domain}/category.html`);
   if (category) url.searchParams.set("categoria", category);
 
-  const title = category ? `${category} premium en Chile | JoyasMuñoz` : "Categorías de joyas | JoyasMuñoz";
-  const description = category
-    ? `Explora ${count} joyas de ${category.toLowerCase()} en JoyasMuñoz. Consulta disponibilidad por WhatsApp.`
-    : "Explora joyas de cobre, plata, alpaca y perlas en JoyasMuñoz.";
+  const isCopper = category === "Joyas de cobre";
+  const title = isCopper
+    ? "Joyas de Cobre en Chile | Esclavas y Pulseras | JoyasMuñoz"
+    : category
+      ? `${category} en Chile | JoyasMuñoz`
+      : "Joyas de Cobre en Chile y Otras Categorías | JoyasMuñoz";
+  const description = isCopper
+    ? `Explora ${count} joyas de cobre en Chile: esclavas, pulseras y diseños con lapislázuli. Consulta por WhatsApp en JoyasMuñoz.`
+    : category
+      ? `Explora ${count} diseños de ${category.toLowerCase()} en JoyasMuñoz. Consulta disponibilidad por WhatsApp.`
+      : "Explora joyas de cobre en Chile: esclavas, pulseras y diseños con lapislázuli. También encuentra plata 925, alpaca y perlas.";
 
   document.title = title;
   setMeta('meta[name="description"]', description);
-  setMeta('meta[name="keywords"]', `${category}, joyas premium Chile, joyería artesanal, JoyasMuñoz`);
+  setMeta(
+    'meta[name="keywords"]',
+    isCopper
+      ? "joyas de cobre en Chile, esclavas de cobre, pulseras de cobre, joyería de cobre, JoyasMuñoz"
+      : `${category || "joyas de cobre en Chile, esclavas de cobre"}, joyería en Chile, JoyasMuñoz`
+  );
   setMeta("#canonicalLink", url.toString(), "href");
   setMeta("#ogUrlMeta", url.toString());
   setMeta('meta[property="og:title"]', title);

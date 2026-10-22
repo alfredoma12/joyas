@@ -9,7 +9,7 @@ const SITE = {
   displayDomain: "joyasmuñoz.lat",
   whatsappNumber: "56949543511",
   whatsappBase: "https://wa.me/56949543511",
-  defaultImage: "assets/optimized/atelier-joyeria-hero.webp",
+  defaultImage: "assets/optimized/esclava-media-cana-cobre.webp",
 };
 
 const CART_STORAGE_KEY = "joyasmunoz_cart";

@@ -17,13 +17,21 @@ function updateProductSeo(product) {
     return;
   }
 
-  const title = `${product.name} ${product.material} | JoyasMuñoz`;
+  const isCopper = product.categoria === "Joyas de cobre" || normalizeText(product.material).includes("cobre");
+  const title = isCopper
+    ? `${product.name}${normalizeText(product.name).includes("cobre") ? "" : " de cobre"} | JoyasMuñoz`
+    : `${product.name} ${product.material} | JoyasMuñoz`;
   const description = `${product.description} Consulta disponibilidad por WhatsApp en JoyasMuñoz.`.slice(0, 158);
   const image = absoluteUrl(getPrimaryImage(product));
 
   document.title = title;
   setMeta('meta[name="description"]', description);
-  setMeta('meta[name="keywords"]', `${product.name}, ${product.material}, ${product.categoria}, joyas Chile, JoyasMuñoz`);
+  setMeta(
+    'meta[name="keywords"]',
+    isCopper
+      ? `${product.name}, joyas de cobre en Chile, esclavas de cobre, joyería de cobre, JoyasMuñoz`
+      : `${product.name}, ${product.material}, ${product.categoria}, joyas Chile, JoyasMuñoz`
+  );
   setMeta('meta[name="robots"]', "index,follow");
   setMeta("#canonicalLink", url.toString(), "href");
   setMeta("#ogUrlMeta", url.toString());

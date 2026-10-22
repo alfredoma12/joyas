@@ -37,7 +37,10 @@ function applyCatalogFilters() {
 function renderFeaturedProducts() {
   const grid = document.querySelector("#featuredGrid");
   if (!grid) return;
-  const featured = catalogCache.filter((product) => product.featured).slice(0, 3);
+  const featured = catalogCache
+    .filter((product) => product.featured)
+    .sort((a, b) => Number(b.categoria === "Joyas de cobre") - Number(a.categoria === "Joyas de cobre"))
+    .slice(0, 3);
   grid.innerHTML = featured
     .map(
       (product) => `
@@ -56,7 +59,10 @@ function renderFeaturedProducts() {
 function renderBestSellers() {
   const grid = document.querySelector("#bestSellerGrid");
   if (!grid) return;
-  const consulted = catalogCache.filter((product) => product.consulted).slice(0, 3);
+  const consulted = catalogCache
+    .filter((product) => product.consulted)
+    .sort((a, b) => Number(b.categoria === "Joyas de cobre") - Number(a.categoria === "Joyas de cobre"))
+    .slice(0, 3);
   grid.innerHTML = consulted
     .map(
       (product) => `
@@ -116,6 +122,7 @@ function renderHomeJsonLd() {
       "@type": "Organization",
       name: SITE.name,
       url: SITE.domain,
+      description: "Joyas de cobre como colección principal, con esclavas, pulseras y diseños con lapislázuli. También ofrece joyas de plata 925, alpaca y perlas.",
       logo: absoluteUrl("assets/diamond-favicon.svg"),
       contactPoint: {
         "@type": "ContactPoint",
@@ -131,6 +138,8 @@ function renderHomeJsonLd() {
       "@type": "JewelryStore",
       name: SITE.name,
       url: SITE.domain,
+      description: "Colección de joyas de cobre en Chile: esclavas, pulseras y diseños con lapislázuli. Consulta disponibilidad por WhatsApp.",
+      knowsAbout: ["Joyas de cobre", "Esclavas de cobre", "Pulseras de cobre", "Joyas con lapislázuli"],
       image: absoluteUrl(SITE.defaultImage),
       telephone: "+56 9 4954 3511",
       address: { "@type": "PostalAddress", addressCountry: "CL" },

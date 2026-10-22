@@ -6,46 +6,54 @@
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/category.html?categoria=Joyas%20de%20cobre</loc>
-    <priority>0.8</priority>
+    <priority>0.9</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/category.html?categoria=Joyas%20de%20plata</loc>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/category.html?categoria=Joyas%20de%20alpaca</loc>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/category.html?categoria=Perlas</loc>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=media-cana</loc>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=trenzado</loc>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=esclava-de-plata</loc>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=aros-moissanita</loc>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=esclava-lisa</loc>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=esclava-alpaca</loc>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=collar-fabiola</loc>
-    <priority>0.7</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=pulsera-cobre-lapislazuli</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://xn--joyasmuoz-r6a.lat/product.html?id=aros-lapislazuli-natural-cobre</loc>
+    <priority>0.8</priority>
   </url>
 </urlset>
