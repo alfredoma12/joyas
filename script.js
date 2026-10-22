@@ -40,11 +40,11 @@ function renderFeaturedProducts() {
   const featured = catalogCache
     .filter((product) => product.featured)
     .sort((a, b) => Number(b.categoria === "Joyas de cobre") - Number(a.categoria === "Joyas de cobre"))
-    .slice(0, 3);
+    .slice(0, 4);
   grid.innerHTML = featured
     .map(
-      (product) => `
-      <article class="featured-card" data-reveal>
+      (product, index) => `
+      <article class="featured-card" data-reveal role="group" aria-roledescription="diapositiva" aria-label="${index + 1} de ${featured.length}">
         <img src="${getPrimaryImage(product)}" alt="${product.name}" loading="lazy" decoding="async" width="680" height="760" />
         <div class="featured-content">
           <p>${product.categoria}</p>
@@ -54,6 +54,45 @@ function renderFeaturedProducts() {
       </article>`
     )
     .join("");
+
+  setupFeaturedCarousel();
+}
+
+function setupFeaturedCarousel() {
+  const carousel = document.querySelector("#featuredGrid");
+  const previous = document.querySelector("#featuredPrev");
+  const next = document.querySelector("#featuredNext");
+  if (!carousel || !previous || !next) return;
+
+  const updateControls = () => {
+    previous.disabled = carousel.scrollLeft <= 1;
+    next.disabled = carousel.scrollWidth - carousel.clientWidth - carousel.scrollLeft <= 1;
+  };
+  const scrollByCard = (direction) => {
+    const card = carousel.querySelector(".featured-card");
+    if (!card) return;
+    const gap = Number.parseFloat(getComputedStyle(carousel).columnGap) || 0;
+    const atEnd = carousel.scrollWidth - carousel.clientWidth - carousel.scrollLeft <= 1;
+    if (direction > 0 && atEnd) {
+      carousel.scrollTo({ left: 0, behavior: "smooth" });
+      return;
+    }
+    carousel.scrollBy({ left: direction * (card.getBoundingClientRect().width + gap), behavior: "smooth" });
+  };
+
+  previous.addEventListener("click", () => scrollByCard(-1));
+  next.addEventListener("click", () => scrollByCard(1));
+  carousel.addEventListener("scroll", updateControls, { passive: true });
+  window.addEventListener("resize", updateControls);
+
+  const section = carousel.closest(".featured-carousel");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  window.setInterval(() => {
+    if (reducedMotion.matches || document.hidden || section?.matches(":hover") || section?.contains(document.activeElement)) return;
+    scrollByCard(1);
+  }, 4000);
+
+  updateControls();
 }
 
 function renderBestSellers() {

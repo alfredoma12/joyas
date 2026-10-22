@@ -104,7 +104,15 @@
             <h2>Joyas de cobre destacadas</h2>
             <p>Conoce esclavas de cobre pulidas y trenzadas, además de diseños con lapislázuli. Explora la colección y consulta por tu favorita.</p>
           </div>
-          <div class="featured-grid" id="featuredGrid"></div>
+          <div class="featured-carousel">
+            <button class="featured-carousel-control" id="featuredPrev" type="button" aria-label="Ver joyas destacadas anteriores" disabled>
+              <span aria-hidden="true">‹</span>
+            </button>
+            <div class="featured-grid" id="featuredGrid" role="region" aria-label="Joyas de cobre destacadas" aria-roledescription="carrusel" tabindex="0"></div>
+            <button class="featured-carousel-control" id="featuredNext" type="button" aria-label="Ver más joyas destacadas">
+              <span aria-hidden="true">›</span>
+            </button>
+          </div>
         </div>
       </section>
 

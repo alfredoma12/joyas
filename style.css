@@ -501,18 +501,66 @@ img {
 }
 
 .featured-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: var(--gold) transparent;
+  scroll-padding-inline: 2px;
   gap: 22px;
+  padding: 4px 2px 18px;
 }
 
 .featured-card {
-  grid-column: span 6;
+  flex: 0 0 clamp(250px, 26vw, 320px);
   position: relative;
   border-radius: 18px;
   overflow: hidden;
-  min-height: 460px;
+  height: 390px;
+  scroll-snap-align: start;
   box-shadow: 0 28px 44px rgba(15, 15, 15, 0.12);
+}
+
+.featured-carousel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+}
+
+.featured-carousel-control {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  transition: color 200ms ease, background-color 200ms ease, opacity 200ms ease;
+}
+
+.featured-carousel-control span {
+  font-size: 1.8rem;
+  line-height: 1;
+}
+
+.featured-carousel-control:hover:not(:disabled) {
+  background: var(--gold);
+  color: var(--white);
+}
+
+.featured-carousel-control:disabled {
+  cursor: default;
+  opacity: 0.35;
+}
+
+.featured-grid:focus-visible {
+  outline: 2px solid var(--gold-deep);
+  outline-offset: 4px;
 }
 
 .featured-card::after {
@@ -544,9 +592,13 @@ img {
 }
 
 .featured-content h3 {
+  display: -webkit-box;
   font-size: clamp(2rem, 3.2vw, 2.8rem);
   line-height: 0.95;
   margin-bottom: 10px;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
 }
 
 .featured-content p {
@@ -1755,11 +1807,6 @@ img {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .featured-card {
-    grid-column: span 12;
-    min-height: 420px;
-  }
-
   .consulted-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1948,9 +1995,46 @@ img {
     grid-column: span 1;
   }
 
+  .featured-carousel {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+
+  .featured-carousel .featured-grid {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    gap: 14px;
+  }
+
   .featured-card {
-    grid-column: span 1;
-    min-height: 360px;
+    flex-basis: min(76vw, 285px);
+    height: 360px;
+  }
+
+  .featured-content {
+    left: 18px;
+    right: 18px;
+    bottom: 18px;
+  }
+
+  .featured-content h3 {
+    font-size: clamp(1.6rem, 6vw, 2rem);
+  }
+
+  .featured-carousel-control {
+    grid-row: 2;
+    width: 38px;
+    height: 38px;
+  }
+
+  #featuredPrev {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  #featuredNext {
+    grid-column: 2;
+    justify-self: end;
   }
 
   .whatsapp-float {
