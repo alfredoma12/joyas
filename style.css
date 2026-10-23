@@ -500,159 +500,63 @@ img {
   background: linear-gradient(180deg, #ffffff 0%, #f8f5ef 100%);
 }
 
-.featured-grid {
-  display: flex;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: thin;
-  scrollbar-color: var(--gold) transparent;
-  scroll-padding-inline: 2px;
-  gap: 22px;
-  padding: 4px 2px 18px;
-}
-
-.featured-card {
-  flex: 0 0 clamp(250px, 26vw, 320px);
-  position: relative;
-  border-radius: 18px;
-  overflow: hidden;
-  height: 390px;
-  scroll-snap-align: start;
-  box-shadow: 0 28px 44px rgba(15, 15, 15, 0.12);
-}
-
-.featured-carousel {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 14px;
-}
-
-.featured-carousel-control {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border: 1px solid var(--hairline);
-  border-radius: 50%;
-  background: var(--white);
-  color: var(--ink);
-  font: inherit;
-  cursor: pointer;
-  transition: color 200ms ease, background-color 200ms ease, opacity 200ms ease;
-}
-
-.featured-carousel-control span {
-  font-size: 1.8rem;
-  line-height: 1;
-}
-
-.featured-carousel-control:hover:not(:disabled) {
-  background: var(--gold);
-  color: var(--white);
-}
-
-.featured-carousel-control:disabled {
-  cursor: default;
-  opacity: 0.35;
-}
-
-.featured-grid:focus-visible {
-  outline: 2px solid var(--gold-deep);
-  outline-offset: 4px;
-}
-
-.featured-card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(5, 5, 5, 0.72), rgba(5, 5, 5, 0.08));
-}
-
-.featured-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1);
-  transition: transform 500ms ease;
-}
-
-.featured-card:hover img {
-  transform: scale(1.06);
-}
-
-.featured-content {
-  position: absolute;
-  z-index: 2;
-  left: 26px;
-  right: 26px;
-  bottom: 24px;
-  color: var(--white);
-}
-
-.featured-content h3 {
-  display: -webkit-box;
-  font-size: clamp(2rem, 3.2vw, 2.8rem);
-  line-height: 0.95;
-  margin-bottom: 10px;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-}
-
-.featured-content p {
-  margin-bottom: 16px;
-  color: color-mix(in srgb, #fff 85%, var(--champagne) 15%);
-}
-
-.consulted {
+.categories {
   background: linear-gradient(180deg, #f7f3eb 0%, #ffffff 100%);
 }
 
-.consulted-grid {
+.category-cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
 }
 
-.consulted-card {
-  background: var(--white);
+.category-card {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
   border-radius: 14px;
-  border: 1px solid rgba(15, 15, 15, 0.08);
   overflow: hidden;
   box-shadow: var(--shadow-soft);
 }
 
-.consulted-image {
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
+.category-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(5, 5, 5, 0.76), rgba(5, 5, 5, 0.02) 72%);
 }
 
-.consulted-image img {
+.category-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 420ms ease;
 }
 
-.consulted-card:hover .consulted-image img {
+.category-card:hover img {
   transform: scale(1.06);
 }
 
-.consulted-content {
-  padding: 18px;
+.category-card-content {
+  position: absolute;
+  z-index: 1;
+  inset: auto 20px 22px;
+  display: grid;
+  gap: 4px;
+  color: var(--white);
 }
 
-.consulted-content h3 {
-  font-size: 1.8rem;
+.category-card-content strong {
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(1.8rem, 2.6vw, 2.4rem);
   line-height: 1;
-  margin-bottom: 6px;
 }
 
-.consulted-content p {
-  color: var(--muted);
-  margin-bottom: 12px;
+.category-card-content > span {
+  color: color-mix(in srgb, #fff 85%, var(--champagne) 15%);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .concierge {
@@ -772,6 +676,7 @@ img {
   padding: 22px;
 }
 
+.product-content h2,
 .product-content h3 {
   font-size: 1.9rem;
   font-weight: 600;
@@ -1216,36 +1121,6 @@ img {
   object-fit: cover;
 }
 
-.testimonials {
-  background: linear-gradient(180deg, #ffffff 0%, #f3f1eb 100%);
-}
-
-.testimonial-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-
-.testimonial-card {
-  background: var(--white);
-  border: 1px solid rgba(15, 15, 15, 0.06);
-  border-radius: 14px;
-  padding: 28px;
-  box-shadow: var(--shadow-soft);
-}
-
-.testimonial-card p {
-  margin-bottom: 14px;
-}
-
-.testimonial-card span {
-  color: var(--gold);
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  font-size: 0.78rem;
-}
-
 .instagram {
   background: linear-gradient(180deg, #ffffff 0%, #f8f4ec 100%);
 }
@@ -1407,21 +1282,14 @@ img {
   place-items: center;
   z-index: 1100;
   animation: floatPulse 2.4s ease-in-out infinite;
-  color: transparent;
   overflow: hidden;
 }
 
-.whatsapp-float::before {
-  content: "WA";
-  color: var(--white);
-  font-weight: 800;
-  letter-spacing: 0;
-}
-
 .whatsapp-float svg {
-  width: 30px;
-  height: 30px;
-  fill: var(--white);
+  width: 34px;
+  height: 34px;
+  fill: currentColor;
+  color: var(--white);
 }
 
 .whatsapp-float:hover {
@@ -1497,70 +1365,6 @@ img {
 .trust-grid span {
   color: #d7d0c3;
   font-size: 0.9rem;
-}
-
-.catalog-toolbar {
-  display: grid;
-  gap: 18px;
-  margin-bottom: 28px;
-  padding: 22px;
-  background: var(--white);
-  border: 1px solid var(--hairline);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow-soft);
-}
-
-.search-box {
-  display: grid;
-  gap: 8px;
-}
-
-.search-box span {
-  font-size: 0.76rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 800;
-  color: var(--gold-deep);
-}
-
-.search-box input {
-  width: 100%;
-  border: 1px solid rgba(15, 15, 15, 0.16);
-  border-radius: 999px;
-  padding: 14px 18px;
-  font: inherit;
-  color: var(--ink);
-  background: #fff;
-}
-
-.filter-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.filter-group button {
-  border: 1px solid rgba(15, 15, 15, 0.16);
-  border-radius: 999px;
-  background: #fff;
-  color: var(--text);
-  padding: 10px 16px;
-  font: inherit;
-  font-size: 0.82rem;
-  font-weight: 800;
-  cursor: pointer;
-}
-
-.filter-group button.active,
-.filter-group button:hover {
-  background: var(--black);
-  border-color: var(--black);
-  color: var(--white);
-}
-
-.catalog-count {
-  color: var(--muted);
-  font-weight: 700;
 }
 
 .cart-overlay {
@@ -1807,8 +1611,8 @@ img {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .consulted-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .category-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .product-card {
@@ -1819,7 +1623,6 @@ img {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .testimonial-grid,
   .instagram-grid,
   .footer-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -1980,11 +1783,8 @@ img {
     padding: 66px 0;
   }
 
-  .featured-grid,
-  .consulted-grid,
   .product-grid,
   .experience-grid,
-  .testimonial-grid,
   .instagram-grid,
   .trust-grid,
   .footer-grid {
@@ -1993,48 +1793,6 @@ img {
 
   .product-card {
     grid-column: span 1;
-  }
-
-  .featured-carousel {
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 8px;
-  }
-
-  .featured-carousel .featured-grid {
-    grid-column: 1 / -1;
-    grid-row: 1;
-    gap: 14px;
-  }
-
-  .featured-card {
-    flex-basis: min(76vw, 285px);
-    height: 360px;
-  }
-
-  .featured-content {
-    left: 18px;
-    right: 18px;
-    bottom: 18px;
-  }
-
-  .featured-content h3 {
-    font-size: clamp(1.6rem, 6vw, 2rem);
-  }
-
-  .featured-carousel-control {
-    grid-row: 2;
-    width: 38px;
-    height: 38px;
-  }
-
-  #featuredPrev {
-    grid-column: 1;
-    justify-self: start;
-  }
-
-  #featuredNext {
-    grid-column: 2;
-    justify-self: end;
   }
 
   .whatsapp-float {
@@ -2057,14 +1815,6 @@ img {
 
   .detail-actions .btn {
     width: 100%;
-  }
-
-  .catalog-toolbar {
-    padding: 16px;
-  }
-
-  .filter-group button {
-    flex: 1 1 auto;
   }
 
   .cart-drawer {

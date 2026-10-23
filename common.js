@@ -44,7 +44,30 @@ function getPrimaryImage(product) {
 }
 
 function buildProductDetailsLink(product) {
-  return `product.html?id=${encodeURIComponent(String(product?.id || ""))}`;
+  const slug = slugify(product?.name || product?.id || "");
+  return `productos/${slug}/`;
+}
+
+function slugify(value) {
+  return normalizeText(value)
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+function getCategorySlug(category) {
+  const slugs = {
+    "Joyas de cobre": "cobre",
+    "Joyas de plata": "plata",
+    "Joyas de alpaca": "alpaca",
+    Perlas: "perlas",
+  };
+  return slugs[category] || "";
+}
+
+function buildCategoryLink(category) {
+  const slug = getCategorySlug(category);
+  return slug ? `categorias/${slug}/` : "category.html";
 }
 
 function findProductById(catalog, productId) {
@@ -98,11 +121,11 @@ function renderProductCard(product) {
     <article class="product-card" data-reveal data-category="${product.categoria}" data-name="${product.name}">
       <a class="product-media" href="${buildProductDetailsLink(product)}" aria-label="Ver detalle de ${product.name}">
         ${badges ? `<div class="product-badges">${badges}</div>` : ""}
-        <img src="${getPrimaryImage(product)}" alt="${product.name} en ${product.material}" loading="lazy" decoding="async" width="480" height="600" />
+        <img src="${getPrimaryImage(product)}" alt="${product.name} (${product.material})" loading="lazy" decoding="async" width="480" height="600" />
       </a>
       <div class="product-content">
         <p class="product-category">${product.categoria}</p>
-        <h3>${product.name}</h3>
+        <h2>${product.name}</h2>
         <p class="product-description">${product.description}</p>
         <dl class="product-meta">
           <div><dt>Material</dt><dd>${product.material}</dd></div>

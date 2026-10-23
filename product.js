@@ -5,37 +5,55 @@
 let productCatalog = [];
 
 function updateProductSeo(product) {
-  const baseUrl = `${SITE.domain}/product.html`;
-  const url = new URL(baseUrl);
-  if (product?.id) url.searchParams.set("id", product.id);
+  const url = new URL(product ? buildProductDetailsLink(product) : "product.html", `${SITE.domain}/`);
 
   if (!product) {
     document.title = "Producto no encontrado | JoyasMuñoz";
     setMeta('meta[name="robots"]', "noindex,follow");
     setMeta('meta[name="description"]', "El producto solicitado no está disponible en este momento.");
-    setMeta("#canonicalLink", baseUrl, "href");
+    setMeta("#canonicalLink", url.toString(), "href");
     return;
   }
 
-  const isCopper = product.categoria === "Joyas de cobre" || normalizeText(product.material).includes("cobre");
-  const title = isCopper
-    ? `${product.name}${normalizeText(product.name).includes("cobre") ? "" : " de cobre"} | JoyasMuñoz`
-    : `${product.name} ${product.material} | JoyasMuñoz`;
-  const description = `${product.description} Consulta disponibilidad por WhatsApp en JoyasMuñoz.`.slice(0, 158);
+  const material = product.material;
+  const titleOverrides = {
+    "pulsera-cobre-lapislazuli": "Pulsera de cobre y lapislázuli en Chile | JoyasMuñoz",
+    "aros-lapislazuli-natural-cobre": "Aros de lapislázuli y cobre en Chile | JoyasMuñoz",
+  };
+  const title = titleOverrides[product.id] || (() => {
+    const normalizedName = normalizeText(product.name);
+    const materialSuffix = normalizeText(material).includes("plata 925") && normalizedName.includes("plata")
+      ? " 925"
+      : product.categoria === "Joyas de cobre" && !normalizedName.includes("cobre")
+        ? " de cobre"
+        : product.categoria === "Joyas de plata" && !normalizedName.includes("plata")
+          ? " de plata 925"
+          : product.categoria === "Perlas" && !normalizedName.includes("perlas")
+            ? " de perlas de río"
+            : "";
+    return `${product.name}${materialSuffix} en Chile | JoyasMuñoz`;
+  })();
+  const descriptions = {
+    "media-cana": "Esclava media caña de cobre puro, pulida y minimalista. Consulta precio y disponibilidad por WhatsApp en JoyasMuñoz.",
+    trenzado: "Esclava trenzada de cobre puro con relieve y acabado luminoso. Consulta precio y disponibilidad por WhatsApp.",
+    "esclava-de-plata": "Esclava de plata 925 con pulido espejo y líneas puras. Revisa su precio y consulta disponibilidad por WhatsApp.",
+    "aros-moissanita": "Aros de plata 925 con moissanita y brillo intenso. Consulta precio y disponibilidad por WhatsApp en JoyasMuñoz.",
+    "esclava-lisa": "Esclava lisa de cobre puro, pulida y de diseño continuo. Consulta precio y disponibilidad por WhatsApp.",
+    "esclava-alpaca": "Esclava de alpaca con brillo plateado y diseño sobrio. Consulta precio y disponibilidad por WhatsApp.",
+    "collar-fabiola": "Collar de perlas de río hecho a mano. Conoce su precio y consulta disponibilidad por WhatsApp en JoyasMuñoz.",
+    "pulsera-cobre-lapislazuli": "Pulsera artesanal de cobre y lapislázuli. Revisa su precio y consulta disponibilidad por WhatsApp.",
+    "aros-lapislazuli-natural-cobre": "Aros artesanales de cobre con lapislázuli natural. Consulta precio y disponibilidad por WhatsApp.",
+  };
+  const description = descriptions[product.id] || `${product.description} Consulta disponibilidad por WhatsApp.`.slice(0, 158);
   const image = absoluteUrl(getPrimaryImage(product));
 
   document.title = title;
   setMeta('meta[name="description"]', description);
-  setMeta(
-    'meta[name="keywords"]',
-    isCopper
-      ? `${product.name}, joyas de cobre en Chile, esclavas de cobre, joyería de cobre, JoyasMuñoz`
-      : `${product.name}, ${product.material}, ${product.categoria}, joyas Chile, JoyasMuñoz`
-  );
   setMeta('meta[name="robots"]', "index,follow");
   setMeta("#canonicalLink", url.toString(), "href");
-  setMeta("#ogUrlMeta", url.toString());
+  setMeta("#ogUrlMeta", url.toString(), "content");
   setMeta("#ogImageMeta", image);
+  setMeta("#ogImageAlt", title);
   setMeta("#twitterImageMeta", image);
   setMeta('meta[property="og:title"]', title);
   setMeta('meta[property="og:description"]', description);
@@ -54,24 +72,30 @@ function updateProductSeo(product) {
         material: product.material,
         image: getProductImages(product).map(absoluteUrl),
         brand: { "@type": "Brand", name: SITE.name },
-        offers: {
-          "@type": "Offer",
-          priceCurrency: "CLP",
-          price: String(product.price || 0),
-          availability: product.stock === false ? "https://schema.org/OutOfStock" : "https://schema.org/InStock",
-          url: url.toString(),
-        },
+        ...(Number.isFinite(product.price) && product.price > 0
+          ? {
+              offers: {
+                "@type": "Offer",
+                priceCurrency: "CLP",
+                price: String(product.price),
+                ...(typeof product.stock === "boolean"
+                  ? { availability: product.stock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock" }
+                  : {}),
+                url: url.toString(),
+              },
+            }
+          : {}),
       },
       {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         itemListElement: [
-          { "@type": "ListItem", position: 1, name: "Inicio", item: SITE.domain },
+          { "@type": "ListItem", position: 1, name: "Inicio", item: `${SITE.domain}/` },
           {
             "@type": "ListItem",
             position: 2,
             name: product.categoria,
-            item: `${SITE.domain}/category.html?categoria=${encodeURIComponent(product.categoria)}`,
+            item: absoluteUrl(buildCategoryLink(product.categoria)),
           },
           { "@type": "ListItem", position: 3, name: product.name, item: url.toString() },
         ],
@@ -89,14 +113,14 @@ function renderProduct(product) {
       <article class="category-empty" data-reveal>
         <h1>Producto no encontrado</h1>
         <p>El enlace puede estar incompleto o la joya ya no está disponible.</p>
-        <a class="btn btn-primary" href="index.html#coleccion">Volver a la colección</a>
+        <a class="btn btn-primary" href="index.html#categorias">Ver categorías</a>
       </article>`;
     return;
   }
 
   renderBreadcrumbs([
-    { name: "Inicio", url: "index.html" },
-    { name: product.categoria, url: `category.html?categoria=${encodeURIComponent(product.categoria)}` },
+    { name: "Inicio", url: "/" },
+    { name: product.categoria, url: buildCategoryLink(product.categoria) },
     { name: product.name, url: window.location.href },
   ]);
 
@@ -112,7 +136,7 @@ function renderProduct(product) {
               .map(
                 (image, index) => `
                 <div class="detail-slide" aria-hidden="${index === 0 ? "false" : "true"}">
-                  <img src="${image}" alt="${product.name}, vista ${index + 1}" loading="${index === 0 ? "eager" : "lazy"}" decoding="async" fetchpriority="${index === 0 ? "high" : "low"}" />
+                  <img src="${image}" alt="${product.name}, vista ${index + 1}" loading="${index === 0 ? "eager" : "lazy"}" decoding="async" fetchpriority="${index === 0 ? "high" : "low"}" width="800" height="1000" />
                 </div>`
               )
               .join("")}
@@ -186,7 +210,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     productCatalog = await loadCatalog();
-    const product = findProductById(productCatalog, new URLSearchParams(window.location.search).get("id"));
+    const productId = document.querySelector("#productDetail")?.dataset.productId
+      || new URLSearchParams(window.location.search).get("id");
+    const product = findProductById(productCatalog, productId);
     updateProductSeo(product);
     renderProduct(product);
   } catch (error) {
